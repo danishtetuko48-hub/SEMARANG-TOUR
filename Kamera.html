@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Pemandu Semarang</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 AR Pemandu Wisata Semarang</h1>
+        <p>Klik 'Mulai Pindai' untuk mengaktifkan kamera dan memindai landmark Semarang.</p>
+        
+        <video id="webcamFeed" autoplay playsinline></video>
+        
+        <button id="startButton">Mulai Pindai Landmark</button>
+        
+        <div id="statusMessage">Menunggu aktivasi kamera...</div>
+        <div id="arOverlay" class="hidden">
+            <h2>Landmark Dikenali!</h2>
+            <p id="landmarkInfo"></p>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

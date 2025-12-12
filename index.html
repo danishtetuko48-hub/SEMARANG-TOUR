@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wisata Semarang</title>
+  <!-- Import font Poppins dari Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Import Playfair Display (Italic Style) -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Terapkan font Poppins ke seluruh elemen */
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('kota lama HD.jpg');
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      image-rendering: high-quality;
+      image-rendering: -webkit-optimize-contrast;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.48) 0%, rgba(255, 255, 255, 0.52) 100%);
+      z-index: -1;
+      pointer-events: none;
+      backdrop-filter: contrast(1.1) brightness(1.05);
+    }
+    h1, h2, h3, h4, h5, h6, p, a {
+      font-family: 'Poppins', sans-serif;
+    }
+    /* Header video background styles */
+    .site-header{
+      position: relative;
+      overflow: hidden;
+    }
+    .site-header video.header-video{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      filter: brightness(0.6);
+    }
+    .site-header .overlay{
+      position: relative;
+      z-index: 1;
+    }
+    /* Ensure weather-top remains visible on mobile */
+    @media (max-width: 576px){
+      #weather-top{right:8px;top:8px;width:140px;font-size:12px;padding:6px}
+    }
+    /* Watermark styles */
+    .watermark {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 5;
+      opacity: 0.15;
+      pointer-events: none;
+      max-width: 150px;
+      max-height: 150px;
+    }
+    .watermark img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+    @media (max-width: 768px){
+      .watermark {
+        bottom: 10px;
+        right: 10px;
+        max-width: 100px;
+        max-height: 100px;
+      }
+    }
+    /* Destinasi Card Hover Effects */
+    .destinasi-card {
+      transition: all 0.3s ease;
+      border: none;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+    .destinasi-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(14, 173, 247, 0.25) !important;
+    }
+    .destinasi-card img {
+      transition: transform 0.3s ease;
+      object-fit: cover;
+      height: 220px;
+    }
+    .destinasi-card:hover img {
+      transform: scale(1.08);
+    }
+    .destinasi-card .card-body {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      padding: 1.5rem;
+    }
+    .destinasi-card .card-title {
+      color: #28a745;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .destinasi-card .card-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #555;
+    }
+    /* Splash Screen / Opening Animation */
+    @keyframes fadeInSplash {
+      0% { opacity: 1; transform: scale(1); }
+      85% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.05); }
+    }
+    @keyframes slideUpText {
+      0% { opacity: 0; transform: translateY(30px); }
+      50% { opacity: 1; }
+      85% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; }
+    }
+    @keyframes scaleInLogo {
+      0% { opacity: 0; transform: scale(0.8); }
+      20% { opacity: 1; transform: scale(1); }
+      85% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #266975 0%, #7ff7ed 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      animation: fadeInSplash 3.5s ease-in-out forwards;
+      overflow: hidden;
+    }
+    #splash-screen.hidden {
+      display: none;
+    }
+    .splash-logo {
+      font-size: 3.5rem;
+      color: white;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      animation: scaleInLogo 3.5s ease-in-out forwards;
+      text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      letter-spacing: 2px;
+    }
+    .splash-text {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.9);
+      text-align: center;
+      animation: slideUpText 3.5s ease-in-out forwards;
+      margin: 0 2rem;
+      line-height: 1.6;
+    }
+    .splash-loader {
+      margin-top: 2rem;
+      width: 50px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      overflow: hidden;
+      animation: slideUpText 3.5s ease-in-out forwards;
+    }
+    .splash-loader::after {
+      content: '';
+      display: block;
+      width: 30%;
+      height: 100%;
+      background: white;
+      animation: loading 1.5s ease-in-out infinite;
+      border-radius: 10px;
+    }
+    @keyframes loading {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(70px); }
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(3deg); }
+      75% { transform: rotate(-3deg); }
+    }
+    @keyframes sparkle-fall {
+      0% {
+        opacity: 1;
+        transform: translateY(-10px) translateX(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(100vh) translateX(100px);
+      }
+    }
+    @keyframes sparkle-twinkle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .sparkles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+      animation: sparkle-fall linear forwards, sparkle-twinkle 0.8s ease-in-out infinite;
+    }
+    .splash-logo-icon {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+      animation: scaleInLogo 3.5s ease-in-out forwards, wiggle 0.6s ease-in-out 1.5s infinite;
+      display: inline-block;
+    }
+    @media (max-width: 576px){
+      .splash-logo { font-size: 2.5rem; }
+      .splash-text { font-size: 1rem; }
+      .splash-logo-icon { font-size: 2.5rem; }
+    }
+
+    /* Galaxy Gradient Header Styles */
+    .galaxy-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4b7bec 75%, #667eea 100%);
+      background-size: 400% 400%;
+      animation: galaxyShift 15s ease infinite;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes galaxyShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .galaxy-header h1 {
+      background: linear-gradient(90deg, #fff 0%, #e0e7ff 50%, #fff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: galaxyGlow 3s ease-in-out infinite;
+      font-weight: 700;
+    }
+
+    @keyframes galaxyGlow {
+      0%, 100% { text-shadow: 0 0 20px rgba(240, 147, 251, 0.3), 0 0 40px rgba(102, 126, 234, 0.2); }
+      50% { text-shadow: 0 0 30px rgba(240, 147, 251, 0.5), 0 0 60px rgba(102, 126, 234, 0.3); }
+    }
+
+    /* Galaxy Navbar Styles */
+    .galaxy-navbar {
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4b7bec 75%, #667eea 100%);
+      background-size: 300% 300%;
+      animation: galaxyShiftNav 10s ease infinite;
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    @keyframes galaxyShiftNav {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .galaxy-navbar .navbar-brand {
+      font-weight: 700;
+      font-size: 1.3rem;
+      background: linear-gradient(90deg, #fff 0%, #e0e7ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .galaxy-navbar .nav-link {
+      color: rgba(255, 255, 255, 0.9) !important;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .galaxy-navbar .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #f093fb, #667eea);
+      transition: width 0.3s ease;
+    }
+
+    .galaxy-navbar .nav-link:hover {
+      color: #fff !important;
+      text-shadow: 0 0 10px rgba(240, 147, 251, 0.5);
+    }
+
+    .galaxy-navbar .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .galaxy-navbar .navbar-toggler {
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .galaxy-navbar .navbar-toggler:focus {
+      box-shadow: 0 0 0 0.25rem rgba(240, 147, 251, 0.25);
+    }
+
+    /* ===== KULINER SECTION ===== */
+    .kuliner-card {
+      border-radius: 12px !important;
+      overflow: hidden !important;
+      transition: all 0.3s ease;
+      border: none !important;
+    }
+
+    .kuliner-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(102, 126, 234, 0.2) !important;
+    }
+
+    #kuliner section {
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    }
+
+    /* ===== GALERI SECTION ===== */
+    #galeri {
+      background: linear-gradient(135deg, rgba(248, 249, 250, 0.95), rgba(255, 255, 255, 0.95));
+    }
+
+    #galeri video, #galeri img {
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    #galeri video:hover, #galeri img:hover {
+      transform: scale(1.05) rotate(-0.5deg);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+    }
+
+    /* ===== REVIEW SECTION ===== */
+    #reviews {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 249, 250, 0.95));
+    }
+
+    #reviews .card {
+      border-top: 3px solid var(--primary);
+      border-radius: 12px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #reviews .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 50px rgba(102, 126, 234, 0.25);
+    }
+
+    .text-warning {
+      color: #FFD700 !important;
+    }
+
+    /* ===== EVENT SECTION ===== */
+    #events {
+      background: linear-gradient(135deg, rgba(248, 249, 250, 0.95), rgba(255, 255, 255, 0.95));
+    }
+
+    #events .card {
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #events .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    }
+
+    #events .badge {
+      font-size: 0.75rem;
+      padding: 0.5rem 1rem !important;
+      border-radius: 50px;
+    }
+
+    /* ===== TRAVEL TIPS SECTION ===== */
+    #travel-tips {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 249, 250, 0.95));
+    }
+
+    #travel-tips .card {
+      border-radius: 14px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      border: none;
+      background: white;
+      position: relative;
+    }
+
+    #travel-tips .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    #travel-tips .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    #travel-tips .card:hover {
+      transform: translateY(-15px) scale(1.02);
+      box-shadow: 0 25px 60px rgba(102, 126, 234, 0.2);
+    }
+
+    /* ===== VISITOR TOOLS SECTION ===== */
+    #visitor-tools {
+      background: linear-gradient(135deg, rgba(248, 249, 250, 0.95), rgba(255, 255, 255, 0.95));
+    }
+
+    #visitor-tools .list-group-item {
+      background: white;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    #visitor-tools .list-group-item:hover {
+      background: #f8f9fa;
+      border-color: var(--primary);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.15);
+      transform: translateX(5px);
+    }
+
+    /* ===== KONTAK SECTION ===== */
+    #kontak {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+    }
+
+    #kontak h2 {
+      color: white;
+      background: none;
+      -webkit-text-fill-color: white;
+    }
+
+    #kontak h2::after {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    #kontak p {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    footer p {
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      border: none;
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-outline-primary {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-outline-primary:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    /* ===== FORMS ===== */
+    .form-control {
+      border-radius: 8px;
+      border: 2px solid #e9ecef;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+    }
+
+    .input-group .form-control:focus {
+      z-index: 5;
+    }
+
+    /* ===== MODAL ===== */
+    .modal-content {
+      border-radius: 12px;
+      border: none;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .modal-title {
+      font-weight: 700;
+    }
+
+    /* ===== SEARCH INPUT ===== */
+    #searchDestinasi {
+      border-radius: 25px !important;
+      padding: 12px 20px !important;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    #searchDestinasi:focus {
+      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
+    }
+
+    /* ===== BADGE STYLES ===== */
+    .badge {
+      border-radius: 50px;
+      padding: 0.5rem 1rem;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== ANIMATION UTILITIES ===== */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(400px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideOutRight {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(400px); opacity: 0; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* ===== SCROLLBAR STYLING ===== */
+    .overflow-auto::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .overflow-auto::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    .overflow-auto::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+
+    .overflow-auto::-webkit-scrollbar-thumb:hover {
+      background: var(--secondary);
+    }
+
+    /* ===== RESPONSIVE TWEAKS ===== */
+    @media (max-width: 768px) {
+      section h2 {
+        font-size: 1.8rem;
+      }
+
+      .destinasi-card .card-body {
+        padding: 1.2rem;
+      }
+
+      .destinasi-card .card-title {
+        font-size: 1.1rem;
+      }
+
+      #travel-tips .card {
+        text-align: center;
+      }
+
+      .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      section h2 {
+        font-size: 1.5rem;
+      }
+
+      .destinasi-card img {
+        height: 180px;
+      }
+
+      #travel-tips .card {
+        margin-bottom: 1rem;
+      }
+
+      footer {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Splash Screen / Opening Animation -->
+  <div id="splash-screen">
+    <div class="sparkles" id="sparkles-container"></div>
+    <audio id="gamelan-audio" autoplay muted loop>
+      <source src="videoplayback.mp3" type="audio/mpeg">
+      Browser Anda tidak mendukung audio.
+    </audio>
+    <div class="splash-logo-icon">🏛️</div>
+    <div class="splash-logo">Semarang Tour</div>
+    <div class="splash-text">
+      Jelajahi Pesona Kota Semarang<br>
+      <strong>Siap menjelajah bersama?</strong>
+    </div>
+    <div class="splash-loader"></div>
+  </div>
+   <!-- Header -->
+  <header class="galaxy-header text-white text-center py-5 site-header">
+    <div id="weather-top" style="position:absolute;top:12px;right:12px;background:#fff;color:#084658;padding:8px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.15);width:170px;text-align:center;font-size:14px;z-index:10;">Memuat cuaca...</div>
+    <div id="liveClock" style="position:absolute;top:12px;left:12px;background:#fff;color:#084658;padding:8px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.15);z-index:10;font-weight:700;">00:00:00</div>
+    <!-- Background video (nuansa alam Semarang) -->
+    <video class="header-video" autoplay muted loop playsinline>
+      <source src="Kota Semarang.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="overlay">
+      <h1>Selamat datang di Kota Semarang!</h1>
+      <p>Jelajahi Pesona Kota Semarang, jantung pesona Jawa Tengah yang kaya akan budaya, kuliner, dan keindahan alam.</p>
+    </div>
+  </header>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark galaxy-navbar">
+    <div class="container">
+      <a class="navbar-brand" href="#">Semarang Tour</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#destinasi">Destinasi</a></li>
+          <li class="nav-item"><a class="nav-link" href="#kuliner">Kuliner</a></li>
+          <li class="nav-item"><a class="nav-link" href="#galeri">Galeri</a></li>
+          <li class="nav-item"><a class="nav-link" href="#events">Event</a></li>
+          <li class="nav-item"><a class="nav-link" href="#reviews">Review</a></li>
+          <li class="nav-item"><a class="nav-link" href="#travel-tips">Tips</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#kameraModal">Scanner</a></li>
+          <li class="nav-item"><a class="nav-link" href="#kontak">Kontak</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- Destinasi -->
+  <section id="destinasi" class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">Destinasi Populer</h2>
+      
+      <!-- Search/Filter Destinasi -->
+      <div class="row mb-4">
+        <div class="col-md-6 mx-auto">
+          <div class="input-group">
+            <input 
+              type="text" 
+              id="searchDestinasi" 
+              class="form-control" 
+              placeholder="🔍 Cari destinasi..."
+              onkeyup="filterDestinasi()"
+              style="border: 2px solid #28a745; padding: 10px 15px; font-weight: 500;"
+            >
+            <button class="btn btn-success" type="button" onclick="resetSearch()" style="font-weight: 600;">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4" id="destinasiContainer">
+        <div class="col-md-4">
+          <div class="card shadow destinasi-card">
+           <img src="lawang sewu.jpg" alt="Foto Bangunan Lawang Sewu" class="img-fluid">
+            <div class="card-body">
+              <h5 class="card-title">Lawang Sewu</h5>
+              <p class="card-text">Bekas bangunan perkantoran yang terletak di seberang Tugu Muda, Kota Semarang, Jawa Tengah, Indonesia.
+                 Bangunan ini dahulu merupakan kantor pusat Nederlandsch-Indische Spoorweg Maatschappij (NIS), dan saat ini berstatus sebagai aset Kereta Api Indonesia (KAI).
+                Hal ini terjadi karena merupakan hasil dari perebutan aset-aset NIS dan perusahaan kereta api lain oleh Djawatan Kereta Api Republik Indonesia (DKARI) pada masa Perang Kemerdekaan.</p>
+              <div class="star-rating" data-destinasi="Lawang Sewu">
+                <button onclick="addRating(this.parentElement, 'Lawang Sewu', 1)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Lawang Sewu', 2)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Lawang Sewu', 3)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Lawang Sewu', 4)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Lawang Sewu', 5)">⭐</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card shadow destinasi-card">
+            <img src="sam poo kong.jpg" alt="Sam Poo Kong" class="img-fluid">
+               <div class="card-body">
+              <h5 class="card-title">Sam Poo Kong</h5>
+              <p class="card-text">Kelenteng Gedung Kuno Sam Poo Kong yang jika diterjemahkan menjadi Gua Tiga Perlindungan. 
+                Terminologi tiga perlindungan adalah doktrin umat Buddha, yang menyatakan berlindung pada Triratna atau Tiratana yaitu Buddha, Dharma dan Sangha</p>
+              <div class="star-rating" data-destinasi="Sam Poo Kong">
+                <button onclick="addRating(this.parentElement, 'Sam Poo Kong', 1)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Sam Poo Kong', 2)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Sam Poo Kong', 3)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Sam Poo Kong', 4)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Sam Poo Kong', 5)">⭐</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card shadow destinasi-card">
+            <img src="pantai marina.jpeg" alt="Pantai Marina" class="img-fluid">
+               <div class="card-body">
+              <h5 class="card-title">Pantai Marina</h5>
+              <p class="card-text">Salah satu objek wisata pantai yang berada di Kota Semarang, Jawa Tengah. 
+                Pantai ini menyimpan pemandangan eksotis khas Kota Semarang. 
+                Dahulu, tempat ini merupakan hutan bakau dan tambak, tapi pemerintah setempat mengubahnya menjadi tempat rekreasi dengan cara reklamasi daratan</p>
+              <div class="star-rating" data-destinasi="Pantai Marina">
+                <button onclick="addRating(this.parentElement, 'Pantai Marina', 1)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Pantai Marina', 2)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Pantai Marina', 3)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Pantai Marina', 4)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Pantai Marina', 5)">⭐</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card shadow destinasi-card">
+            <img src="kota lama.jpg" alt="Kota lama" class="img-fluid">
+               <div class="card-body">
+              <h5 class="card-title">Kota Lama </h5>
+              <p class="card-text">suatu kawasan di Semarang, Jawa Tengah yang menjadi pusat perdagangan pada abad 19-20. 
+                Pada masa itu, untuk mengamankan warga dan wilayahnya, kawasan itu dibangun benteng, yang dinamai benteng Vijfhoek. 
+                Untuk mempercepat jalur perhubungan antar ketiga pintu gerbang di benteng itu maka dibuat jalan-jalan perhubungan, dengan jalan utamanya dinamai Heerenstraat</p>
+              <div class="star-rating" data-destinasi="Kota Lama">
+                <button onclick="addRating(this.parentElement, 'Kota Lama', 1)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Kota Lama', 2)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Kota Lama', 3)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Kota Lama', 4)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Kota Lama', 5)">⭐</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card shadow destinasi-card">
+            <img src="akpol.jpg" alt="Akademi Kepolisian" class="img-fluid">
+               <div class="card-body">
+              <h5 class="card-title">Akademi Kepolisian </h5>
+              <p class="card-text">Akademi Kepolisian atau sering disingkat Akpol adalah sebuah lembaga pendidikan untuk mencetak Perwira Polri,
+                 Akpol adalah unsur pelaksana pendidikan pembentukan Perwira Polri yang berada di bawah Lemdiklat Polri (Lembaga Pendidikan dan Laihan Polri)</p>
+              <div class="star-rating" data-destinasi="Akademi Kepolisian">
+                <button onclick="addRating(this.parentElement, 'Akademi Kepolisian', 1)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Akademi Kepolisian', 2)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Akademi Kepolisian', 3)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Akademi Kepolisian', 4)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Akademi Kepolisian', 5)">⭐</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card shadow destinasi-card">
+            <img src="Dusun semilir.webp" alt="Dusun Semilir" class="img-fluid">
+               <div class="card-body">
+              <h5 class="card-title">Dusun Semilir</h5>
+              <p class="card-text">Sebuah taman hiburan terpadu yang berlokasi di Bawen, Semarang, menawarkan berbagai atraksi dalam satu kawasan, seperti wahana permainan, spot foto Instagrammable, area kuliner, penginapan, hingga pusat oleh-oleh.</p>
+              <div class="star-rating" data-destinasi="Dusun Semilir">
+                <button onclick="addRating(this.parentElement, 'Dusun Semilir', 1)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Dusun Semilir', 2)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Dusun Semilir', 3)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Dusun Semilir', 4)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Dusun Semilir', 5)">⭐</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card shadow destinasi-card">
+            <img src="cimory semarang.jpg" alt="Cimory" class="img-fluid">
+               <div class="card-body">
+              <h5 class="card-title">Cimory</h5>
+              <p class="card-text">Perusahaan makanan dan minuman terkemuka yang memproduksi produk berbasis protein seperti
+                 yogurt, susu, sosis, dan nugget dengan merek Cimory dan Kanzler. Pengunjung dapat melihat proses produksi dan menikmati produk segar.</p>
+              <div class="star-rating" data-destinasi="Cimory">
+                <button onclick="addRating(this.parentElement, 'Cimory', 1)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Cimory', 2)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Cimory', 3)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Cimory', 4)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Cimory', 5)">⭐</button>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card shadow destinasi-card">
+            <img src="saloka semarang.jpg" alt="Saloka" class="img-fluid">
+               <div class="card-body">
+              <h5 class="card-title">Saloka</h5>
+              <p class="card-text">taman hiburan tematik yang terletak di Kabupaten Semarang, Jawa Tengah.
+                Saloka Theme Park juga memiliki sebuah maskot bernama 'Loka' yang berwujud naga berwarna hijau. Nama Loka diambil dari nama tokoh dalam cerita rakyat Rawa Pening.
+              </p>
+              <div class="star-rating" data-destinasi="Saloka">
+                <button onclick="addRating(this.parentElement, 'Saloka', 1)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Saloka', 2)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Saloka', 3)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Saloka', 4)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Saloka', 5)">⭐</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card shadow destinasi-card">
+            <img src="desa pelangi.jpg" alt="Kampung Pelangi" class="img-fluid">
+               <div class="card-body">
+              <h5 class="card-title">Kampung Pelangi</h5>
+              <p class="card-text">merupakan sebutan untuk pemukiman atau kampung yang bangunan rumah penduduknya diwarnai berbagai macam warna cat. 
+                Banyak Kampung Pelangi yang pada awalnya merupakan daerah kumuh kemudian secara kreatif diubah menjadi daerah yang menarik untuk dijadikan sebagai destinasi wisata</p>
+              <div class="star-rating" data-destinasi="Kampung Pelangi">
+                <button onclick="addRating(this.parentElement, 'Kampung Pelangi', 1)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Kampung Pelangi', 2)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Kampung Pelangi', 3)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Kampung Pelangi', 4)">⭐</button>
+                <button onclick="addRating(this.parentElement, 'Kampung Pelangi', 5)">⭐</button> 
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+   <!-- Kuliner -->
+  <section id="kuliner" class="py-4">
+    <div class="container">
+      <h3 class="text-center mb-3">Kuliner Khas Semarang</h3>
+      <div class="row g-3">
+        <div class="col-6 col-sm-4 col-md-3">
+          <div class="card shadow-sm kuliner-card">
+            <img src="lumpia smrng.jpg" alt="Lumpia smrng" class="card-img-top" style="height:120px;object-fit:cover;">
+            <div class="card-body p-2">
+              <h6 class="card-title mb-1">Lumpia Semarang</h6>
+              <div class="small text-muted mb-2">Jl. Pemuda No.1</div>
+              <div class="d-flex justify-content-between gap-1">
+                <a class="btn btn-sm btn-outline-primary flex-grow-1" href="https://www.google.com/maps/search/?api=1&query=Lumpia+Semarang+Jl.+Pemuda+Semarang" target="_blank">📍 Arah</a>
+                <button class="btn btn-sm btn-outline-secondary flex-grow-1" onclick="openRouteFromHere('Lumpia Semarang Jl. Pemuda Semarang')">Rute</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-md-3">
+          <div class="card shadow-sm kuliner-card">
+            <img src="tahu gimbal.jpg" alt="Tahu Gimbal" class="card-img-top" style="height:120px;object-fit:cover;">
+            <div class="card-body p-2">
+              <h6 class="card-title mb-1">Tahu Gimbal</h6>
+              <div class="small text-muted mb-2">Jl. Pemuda / Kota Lama</div>
+              <div class="d-flex justify-content-between gap-1">
+                <a class="btn btn-sm btn-outline-primary flex-grow-1" href="https://www.google.com/maps/search/?api=1&query=Tahu+Gimbal+Semarang" target="_blank">📍 Arah</a>
+                <button class="btn btn-sm btn-outline-secondary flex-grow-1" onclick="openRouteFromHere('Tahu Gimbal Semarang')">Rute</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-md-3">
+          <div class="card shadow-sm kuliner-card">
+            <img src="wingkooo.jpg" alt="Wingko Babat" class="card-img-top" style="height:120px;object-fit:cover;">
+            <div class="card-body p-2">
+              <h6 class="card-title mb-1">Wingko Babat</h6>
+              <div class="small text-muted mb-2">Bebas (oleh-oleh khas)</div>
+              <div class="d-flex justify-content-between gap-1">
+                <a class="btn btn-sm btn-outline-primary flex-grow-1" href="https://www.google.com/maps/search/?api=1&query=Wingko+Babat+Semarang" target="_blank">📍 Arah</a>
+                <button class="btn btn-sm btn-outline-secondary flex-grow-1" onclick="openRouteFromHere('Wingko Babat Semarang')">Rute</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-md-3">
+          <div class="card shadow-sm kuliner-card">
+            <img src="soto.jpg" alt="Soto Bangkong" class="card-img-top" style="height:120px;object-fit:cover;">
+            <div class="card-body p-2">
+              <h6 class="card-title mb-1">Soto Bangkong</h6>
+              <div class="small text-muted mb-2">Jl. Pemuda / Tugu Muda</div>
+              <div class="d-flex justify-content-between gap-1">
+                <a class="btn btn-sm btn-outline-primary flex-grow-1" href="https://www.google.com/maps/search/?api=1&query=Soto+Bangkong+Semarang" target="_blank">📍 Arah</a>
+                <button class="btn btn-sm btn-outline-secondary flex-grow-1" onclick="openRouteFromHere('Soto Bangkong Semarang')">Rute</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Visitor Tools: Weather + Directions -->
+  <section id="visitor-tools" class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">Visitor Tools</h2>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card shadow p-3">
+            <h5 class="card-title">Cuaca Sekarang (Semarang)</h5>
+            <div id="weather" class="py-2">
+              <p>Memuat cuaca...</p>
+            </div>
+            <small class="text-muted">Sumber: Open-Meteo (tanpa API key)</small>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="card shadow p-3">
+            <h5 class="card-title">Destinasi & Arah</h5>
+            <p>Pilih salah satu untuk membuka petunjuk arah di Google Maps.</p>
+            <div class="list-group">
+              <div class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                  <strong>Lawang Sewu</strong>
+                  <div class="text-muted">Ikon sejarah kota</div>
+                  <div class="small text-muted mt-1 address-line">Alamat: Jl. Pemuda No.1, Semarang</div>
+                </div>
+                <div class="text-end">
+                  <a class="btn btn-sm btn-primary me-1" href="https://www.google.com/maps/search/?api=1&query=Lawang+Sewu+Semarang" target="_blank">📍 Arah</a>
+                  <button class="btn btn-sm btn-outline-secondary me-1" onclick="openRouteFromHere('Lawang Sewu Semarang')">Rute dari Lokasi Saya</button>
+                  <button class="btn btn-sm btn-light" onclick="copyAddress('Jl. Pemuda No.1, Semarang')">Salin</button>
+                </div>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                  <strong>Sam Poo Kong</strong>
+                  <div class="text-muted">Klenteng & wisata budaya</div>
+                  <div class="small text-muted mt-1 address-line">Alamat: Jl. Simongan No.129, Semarang</div>
+                </div>
+                <div class="text-end">
+                  <a class="btn btn-sm btn-primary me-1" href="https://www.google.com/maps/search/?api=1&query=Sam+Poo+Kong+Semarang" target="_blank">📍 Arah</a>
+                  <button class="btn btn-sm btn-outline-secondary me-1" onclick="openRouteFromHere('Sam Poo Kong Semarang')">Rute dari Lokasi Saya</button>
+                  <button class="btn btn-sm btn-light" onclick="copyAddress('Jl. Simongan No.129, Semarang')">Salin</button>
+                </div>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                  <strong>Pantai Marina</strong>
+                  <div class="text-muted">Rekreasi pantai</div>
+                  <div class="small text-muted mt-1 address-line">Alamat: Pantai Marina, Semarang</div>
+                </div>
+                <div class="text-end">
+                  <a class="btn btn-sm btn-primary me-1" href="https://www.google.com/maps/search/?api=1&query=Pantai+Marina+Semarang" target="_blank">📍 Arah</a>
+                  <button class="btn btn-sm btn-outline-secondary me-1" onclick="openRouteFromHere('Pantai Marina Semarang')">Rute dari Lokasi Saya</button>
+                  <button class="btn btn-sm btn-light" onclick="copyAddress('Pantai Marina, Semarang')">Salin</button>
+                </div>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                  <strong>Kota Lama</strong>
+                  <div class="text-muted">Kawasan bersejarah</div>
+                  <div class="small text-muted mt-1 address-line">Alamat: Jl. Branjangan, Semarang</div>
+                </div>
+                <div class="text-end">
+                  <a class="btn btn-sm btn-primary me-1" href="https://www.google.com/maps/search/?api=1&query=Kota+Lama+Semarang" target="_blank">📍 Arah</a>
+                  <button class="btn btn-sm btn-outline-secondary me-1" onclick="openRouteFromHere('Kota Lama Semarang')">Rute dari Lokasi Saya</button>
+                  <button class="btn btn-sm btn-light" onclick="copyAddress('Jl. Branjangan, Semarang')">Salin</button>
+                </div>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                  <strong>Akpol</strong>
+                  <div class="text-muted">Akademi Kepolisian</div>
+                  <div class="small text-muted mt-1 address-line">Alamat: Jl. Raya AKPOL, Semarang</div>
+                </div>
+                <div class="text-end">
+                  <a class="btn btn-sm btn-primary me-1" href="https://www.google.com/maps/search/?api=1&query=Akademi+Kepolisian+Semarang" target="_blank">📍 Arah</a>
+                  <button class="btn btn-sm btn-outline-secondary me-1" onclick="openRouteFromHere('Akademi Kepolisian Semarang')">Rute dari Lokasi Saya</button>
+                  <button class="btn btn-sm btn-light" onclick="copyAddress('Jl. Raya AKPOL, Semarang')">Salin</button>
+                </div>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                  <strong>Dusun Semilir</strong>
+                  <div class="text-muted">Wisata pedesaan & agro-tourism</div>
+                  <div class="small text-muted mt-1 address-line">Alamat: Dusun Semilir, Ungaran, Semarang</div>
+                </div>
+                <div class="text-end">
+                  <a class="btn btn-sm btn-primary me-1" href="https://www.google.com/maps/search/?api=1&query=Dusun+Semilir+Ungaran+Semarang" target="_blank">📍 Arah</a>
+                  <button class="btn btn-sm btn-outline-secondary me-1" onclick="openRouteFromHere('Dusun Semilir Ungaran Semarang')">Rute dari Lokasi Saya</button>
+                  <button class="btn btn-sm btn-light" onclick="copyAddress('Dusun Semilir, Ungaran, Semarang')">Salin</button>
+                </div>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                  <strong>Cimory</strong>
+                  <div class="text-muted">Wisata agro & produk olahan susu</div>
+                  <div class="small text-muted mt-1 address-line">Alamat: Cimory, Jl. Raya Ungaran, Semarang</div>
+                </div>
+                <div class="text-end">
+                  <a class="btn btn-sm btn-primary me-1" href="https://www.google.com/maps/search/?api=1&query=Cimory+Ungaran+Semarang" target="_blank">📍 Arah</a>
+                  <button class="btn btn-sm btn-outline-secondary me-1" onclick="openRouteFromHere('Cimory Ungaran Semarang')">Rute dari Lokasi Saya</button>
+                  <button class="btn btn-sm btn-light" onclick="copyAddress('Cimory, Jl. Raya Ungaran, Semarang')">Salin</button>
+                </div>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                  <strong>Saloka Theme Park</strong>
+                  <div class="text-muted">Taman hiburan tematik</div>
+                  <div class="small text-muted mt-1 address-line">Alamat: Jl. Raya Ungaran-Salatiga Km.10, Kab. Semarang</div>
+                </div>
+                <div class="text-end">
+                  <a class="btn btn-sm btn-primary me-1" href="https://www.google.com/maps/search/?api=1&query=Saloka+Theme+Park+Semarang" target="_blank">📍 Arah</a>
+                  <button class="btn btn-sm btn-outline-secondary me-1" onclick="openRouteFromHere('Saloka Theme Park Semarang')">Rute dari Lokasi Saya</button>
+                  <button class="btn btn-sm btn-light" onclick="copyAddress('Jl. Raya Ungaran-Salatiga Km.10, Kab. Semarang')">Salin</button>
+                </div>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                  <strong>Kampung Pelangi</strong>
+                  <div class="text-muted">Kampung wisata dengan rumah warna-warni</div>
+                  <div class="small text-muted mt-1 address-line">Alamat: Kampung Pelangi, Jl. Karangwuni, Semarang Barat</div>
+                </div>
+                <div class="text-end">
+                  <a class="btn btn-sm btn-primary me-1" href="https://www.google.com/maps/search/?api=1&query=Kampung+Pelangi+Semarang" target="_blank">📍 Arah</a>
+                  <button class="btn btn-sm btn-outline-secondary me-1" onclick="openRouteFromHere('Kampung Pelangi Semarang')">Rute dari Lokasi Saya</button>
+                  <button class="btn btn-sm btn-light" onclick="copyAddress('Kampung Pelangi, Jl. Karangwuni, Semarang Barat')">Salin</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Review & Testimoni Pengunjung -->
+  <section id="reviews" class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-5">Testimoni Pengunjung</h2>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+              <div class="mb-3">
+                <span class="text-warning">⭐⭐⭐⭐⭐</span>
+              </div>
+              <p class="card-text">"Pengalaman wisata yang luar biasa! Pemandu wisata sangat ramah dan informatif. Semarang memiliki banyak keindahan yang tersembunyi!"</p>
+              <div class="d-flex align-items-center mt-3">
+                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">👩</div>
+                <div class="ms-3">
+                  <strong>Siti Nurhaliza</strong>
+                  <div class="small text-muted">Jakarta</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+              <div class="mb-3">
+                <span class="text-warning">⭐⭐⭐⭐⭐</span>
+              </div>
+              <p class="card-text">"Kota Lama sangat instagrammable! Saya merekomendikan kepada teman-teman. Harga tiket masuk sangat terjangkau dan layanan bagus."</p>
+              <div class="d-flex align-items-center mt-3">
+                <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">👨</div>
+                <div class="ms-3">
+                  <strong>Budi Santoso</strong>
+                  <div class="small text-muted">Surabaya</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+              <div class="mb-3">
+                <span class="text-warning">⭐⭐⭐⭐⭐</span>
+              </div>
+              <p class="card-text">"Pantai Marina dan Dusun Semilir adalah spot terbaik! Cocok untuk keluarga dan grup. Pasti akan kembali lagi tahun depan!"</p>
+              <div class="d-flex align-items-center mt-3">
+                <div class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">👨‍👩‍👧</div>
+                <div class="ms-3">
+                  <strong>Keluarga Wijaya</strong>
+                  <div class="small text-muted">Bandung</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Event Calendar & Acara Menarik -->
+  <section id="events" class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-5">Event & Acara Menarik</h2>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="card shadow-sm border-0 h-100" style="border-left: 5px solid #667eea;">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="card-title mb-0">Festival Semarang</h5>
+                <span class="badge bg-info">Mei 2025</span>
+              </div>
+              <p class="card-text text-muted">Perayaan budaya dengan pertunjukan seni tradisional, pameran kerajinan lokal, dan kuliner nusantara. Jangan lewatkan kesempatan emas ini!</p>
+              <div class="small text-secondary mb-3">📍 Tugu Muda, Semarang</div>
+              <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#eventDetail" onclick="setEventDetail('Festival Semarang', 'Mei 2025', 'Perayaan budaya dengan pertunjukan seni tradisional, pameran kerajinan lokal, dan kuliner nusantara.')">Selengkapnya</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card shadow-sm border-0 h-100" style="border-left: 5px solid #764ba2;">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="card-title mb-0">Pasar Malam Kota Lama</h5>
+                <span class="badge bg-warning text-dark">Setiap Jumat</span>
+              </div>
+              <p class="card-text text-muted">Pasar tradisional dengan berbagai pilihan makanan, minuman, dan produk lokal. Suasana meriah yang sempurna untuk berkunjung bersama keluarga.</p>
+              <div class="small text-secondary mb-3">📍 Kota Lama, Semarang</div>
+              <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#eventDetail" onclick="setEventDetail('Pasar Malam Kota Lama', 'Setiap Jumat', 'Pasar tradisional dengan berbagai pilihan makanan, minuman, dan produk lokal.')">Selengkapnya</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card shadow-sm border-0 h-100" style="border-left: 5px solid #f093fb;">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="card-title mb-0">Workshop Batik Tradisional</h5>
+                <span class="badge bg-danger">April 2025</span>
+              </div>
+              <p class="card-text text-muted">Pelajari seni batik langsung dari pengrajin berpengalaman. Workshop interaktif yang mendidik dan menyenangkan untuk segala usia.</p>
+              <div class="small text-secondary mb-3">📍 Pusat Kerajinan Semarang</div>
+              <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#eventDetail" onclick="setEventDetail('Workshop Batik Tradisional', 'April 2025', 'Pelajari seni batik langsung dari pengrajin berpengalaman.')">Selengkapnya</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card shadow-sm border-0 h-100" style="border-left: 5px solid #4b7bec;">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="card-title mb-0">Jogging Ramah Pantai Marina</h5>
+                <span class="badge bg-success">Minggu Pagi</span>
+              </div>
+              <p class="card-text text-muted">Kegiatan jogging komunitas di tepi Pantai Marina dengan pemandangan indah. Gratis dan terbuka untuk semua tingkat kebugaran.</p>
+              <div class="small text-secondary mb-3">📍 Pantai Marina, Semarang</div>
+              <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#eventDetail" onclick="setEventDetail('Jogging Ramah Pantai Marina', 'Minggu Pagi', 'Kegiatan jogging komunitas di tepi Pantai Marina dengan pemandangan indah.')">Selengkapnya</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Travel Tips & Panduan -->
+  <section id="travel-tips" class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-5">Travel Tips & Panduan Wisata</h2>
+      <div class="row g-4">
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0 text-center h-100">
+            <div class="card-body">
+              <div style="font-size: 2.5rem; margin-bottom: 1rem;">🚗</div>
+              <h5 class="card-title">Transportasi</h5>
+              <p class="card-text text-muted small">Gunakan taksi online, ojek, atau sewa mobil untuk keliling Semarang dengan nyaman. Harga terjangkau dan aman.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0 text-center h-100">
+            <div class="card-body">
+              <div style="font-size: 2.5rem; margin-bottom: 1rem;">🏨</div>
+              <h5 class="card-title">Akomodasi</h5>
+              <p class="card-text text-muted small">Pilihan hotel dan hostel tersedia untuk semua budget. Booking online di aplikasi travel populer lebih hemat.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0 text-center h-100">
+            <div class="card-body">
+              <div style="font-size: 2.5rem; margin-bottom: 1rem;">🍽️</div>
+              <h5 class="card-title">Kuliner</h5>
+              <p class="card-text text-muted small">Jangan lewatkan lumpia, tahu gimbal, dan wingko babat. Coba di warung lokal untuk rasa autentik!</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0 text-center h-100">
+            <div class="card-body">
+              <div style="font-size: 2.5rem; margin-bottom: 1rem;">📸</div>
+              <h5 class="card-title">Fotografi</h5>
+              <p class="card-text text-muted small">Bawa kamera/smartphone berkualitas. Golden hour di Pantai Marina sangat sempurna untuk foto.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0 text-center h-100">
+            <div class="card-body">
+              <div style="font-size: 2.5rem; margin-bottom: 1rem;">💰</div>
+              <h5 class="card-title">Budget</h5>
+              <p class="card-text text-muted small">Persiapkan budget Rp 500K-1JT per hari untuk pengalaman wisata yang nyaman dan menyenangkan.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0 text-center h-100">
+            <div class="card-body">
+              <div style="font-size: 2.5rem; margin-bottom: 1rem;">⏰</div>
+              <h5 class="card-title">Waktu Terbaik</h5>
+              <p class="card-text text-muted small">April-Mei dan September-Oktober adalah waktu terbaik untuk berkunjung. Hindari musim hujan.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0 text-center h-100">
+            <div class="card-body">
+              <div style="font-size: 2.5rem; margin-bottom: 1rem;">📱</div>
+              <h5 class="card-title">Koneksi Internet</h5>
+              <p class="card-text text-muted small">Sinyal 4G LTE tersedia di seluruh kota. Pertimbangkan membeli SIM lokal untuk tarif data yang lebih murah.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0 text-center h-100">
+            <div class="card-body">
+              <div style="font-size: 2.5rem; margin-bottom: 1rem;">🆘</div>
+              <h5 class="card-title">Keamanan</h5>
+              <p class="card-text text-muted small">Semarang adalah kota yang relatif aman. Perhatikan barang berharga dan gunakan akal sehat saat berpergian.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kontak -->
+  <section id="kontak" class="py-5">
+    <div class="container text-center">
+      <h2 class="mb-4">Kontak</h2>
+      <p>Email info: @wisatasemarangtour.com</p>
+      <p>Telepon: +62 812-3456-7890</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-3">
+    <p>&copy; 2025 Wisata Semarang. Semua Hak Dilindungi.</p>
+  </footer>
+
+  <!-- Kamera Modal -->
+  <div class="modal fade" id="kameraModal" tabindex="-1" aria-labelledby="kameraModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen-md-down modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="kameraModalLabel">Scanner</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body p-0">
+          <iframe src="Kamera.html" title="Kamera" style="border:0;width:100%;height:70vh;"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Event Detail Modal -->
+  <div class="modal fade" id="eventDetail" tabindex="-1" aria-labelledby="eventDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="eventDetailLabel">Detail Acara</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body">
+          <h6 id="eventTitle">Nama Acara</h6>
+          <p class="text-muted mb-3"><strong>Waktu:</strong> <span id="eventTime">-</span></p>
+          <p id="eventDesc">Deskripsi acara akan ditampilkan di sini.</p>
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary btn-sm" onclick="shareEvent()">📱 Bagikan</button>
+            <button class="btn btn-success btn-sm" onclick="addEventToCalendar()">📅 Tambah ke Kalender</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Hide splash screen after animation completes
+    window.addEventListener('load', function(){
+      setTimeout(function(){
+        const splash = document.getElementById('splash-screen');
+        if(splash){
+          splash.classList.add('hidden');
+        }
+        // Keep audio playing after splash hidden
+        const audio = document.getElementById('gamelan-audio');
+        if(audio) {
+          audio.muted = false; // Unmute after splash
+          audio.play().catch(e => console.log('Audio play error:', e));
+        }
+      }, 3500);
+    });
+    // Fallback: hide splash if it takes too long
+    setTimeout(function(){
+      const splash = document.getElementById('splash-screen');
+      if(splash){
+        splash.classList.add('hidden');
+      }
+      const audio = document.getElementById('gamelan-audio');
+      if(audio) {
+        audio.muted = false;
+        audio.play().catch(e => console.log('Audio play error:', e));
+      }
+    }, 4000);
+    // Create sparkles effect
+    (function(){
+      const container = document.getElementById('sparkles-container');
+      if(!container) return;
+      function createSparkle(){
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        const x = Math.random() * window.innerWidth;
+        const duration = 2 + Math.random() * 1;
+        sparkle.style.left = x + 'px';
+        sparkle.style.animationDuration = duration + 's';
+        container.appendChild(sparkle);
+        setTimeout(()=>sparkle.remove(), duration * 1000);
+      }
+      // Create sparkles continuously during splash screen
+      const sparkleInterval = setInterval(createSparkle, 200);
+      setTimeout(()=>clearInterval(sparkleInterval), 3500);
+    })();
+    // Set audio volume and ensure autoplay
+    window.addEventListener('load', function(){
+      const audio = document.getElementById('gamelan-audio');
+      if(audio){
+        audio.volume = 0.3; // Set volume to 30%
+        audio.muted = false; // Unmute
+        audio.play().catch(function(error) {
+          console.log('Audio autoplay attempt failed, retrying...');
+          // Retry after a short delay
+          setTimeout(() => {
+            audio.play().catch(e => console.log('Retry failed:', e));
+          }, 500);
+        });
+      }
+    });
+    
+    // Try to play audio on first user interaction as fallback
+    document.addEventListener('click', function playAudioOnClick() {
+      const audio = document.getElementById('gamelan-audio');
+      if(audio && audio.paused) {
+        audio.muted = false;
+        audio.play().catch(e => console.log('Play on click error:', e));
+        document.removeEventListener('click', playAudioOnClick);
+      }
+    }, { once: true });
+    // Fetch current weather for Semarang (approx lat/lon)
+    (function(){
+      const weatherEl = document.getElementById('weather');
+      const topEl = document.getElementById('weather-top');
+      // if neither exists, nothing to do
+      if(!weatherEl && !topEl) return;
+      const lat = -6.9667;
+      const lon = 110.4167;
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&temperature_unit=celsius`;
+      fetch(url).then(r=>r.json()).then(data=>{
+        if(data && data.current_weather){
+          const w = data.current_weather;
+          const htmlFull = `
+            <div class="d-flex align-items-center">
+              <div class="me-3">
+                <div style="font-size:1.6rem;font-weight:600">${w.temperature}°C</div>
+                <div class="text-muted">Kecepatan angin: ${w.windspeed} km/h</div>
+              </div>
+              <div class="text-end ms-auto">
+                <div class="text-muted">Waktu (UTC):</div>
+                <div>${w.time}</div>
+              </div>
+            </div>
+          `;
+          const htmlCompact = `
+            <div style="font-weight:700">${w.temperature}°C</div>
+            <div class="text-muted" style="font-size:12px">${w.windspeed} km/h</div>
+          `;
+          if(weatherEl) weatherEl.innerHTML = htmlFull;
+          if(topEl) topEl.innerHTML = htmlCompact;
+        } else {
+          if(weatherEl) weatherEl.textContent = 'Cuaca tidak tersedia.';
+          if(topEl) topEl.textContent = 'Cuaca tidak tersedia.';
+        }
+      }).catch(err=>{
+        if(weatherEl) weatherEl.textContent = 'Gagal memuat cuaca.';
+        if(topEl) topEl.textContent = 'Gagal memuat cuaca.';
+      });
+    })();
+    // Open Google Maps directions from user's current location to destination
+    window.openRouteFromHere = function(destinationQuery){
+      if(!navigator.geolocation){
+        alert('Geolocation tidak didukung oleh browser Anda.');
+        // fallback: open maps search
+        const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(destinationQuery)}`;
+        window.open(url, '_blank');
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(function(pos){
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        const url = `https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${encodeURIComponent(destinationQuery)}&travelmode=driving`;
+        window.open(url, '_blank');
+      }, function(err){
+        // On error, fallback to opening destination only
+        if(err.code === err.PERMISSION_DENIED){
+          alert('Izin lokasi ditolak. Membuka peta tujuan tanpa origin.');
+        } else {
+          alert('Gagal mendapatkan lokasi. Membuka peta tujuan tanpa origin.');
+        }
+        const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(destinationQuery)}`;
+        window.open(url, '_blank');
+      }, {enableHighAccuracy:true, timeout:10000});
+    };
+    // Copy address to clipboard with feedback
+    window.copyAddress = function(address){
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(address).then(()=>{
+          alert('Alamat disalin: ' + address);
+        }).catch(()=>{
+          prompt('Salin alamat berikut secara manual:', address);
+        });
+      } else {
+        prompt('Salin alamat berikut:', address);
+      }
+    };
+
+    // ===== FITUR MENARIK BARU =====
+
+    // Dark Mode Toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const isDarkMode = document.body.classList.contains('dark-mode');
+      localStorage.setItem('darkMode', isDarkMode);
+      updateDarkModeButton();
+    }
+
+    function updateDarkModeButton() {
+      const btn = document.getElementById('darkModeToggle');
+      if (document.body.classList.contains('dark-mode')) {
+        btn.innerHTML = '☀️ Light Mode';
+        document.body.style.background = '#1a1a1a';
+      } else {
+        btn.innerHTML = '🌙 Dark Mode';
+        document.body.style.background = "url('kota lama HD.jpg')";
+      }
+    }
+
+    // Check dark mode preference on load
+    window.addEventListener('load', function() {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+        updateDarkModeButton();
+      }
+    });
+
+    // Filter/Search Destinasi
+    function filterDestinasi() {
+      const searchValue = document.getElementById('searchDestinasi').value.toLowerCase();
+      const cards = document.querySelectorAll('.destinasi-card');
+      
+      cards.forEach(card => {
+        const title = card.querySelector('.card-title').textContent.toLowerCase();
+        const text = card.querySelector('.card-text').textContent.toLowerCase();
+        
+        if (title.includes(searchValue) || text.includes(searchValue)) {
+          card.closest('.col-md-4').style.display = '';
+          card.style.animation = 'fadeIn 0.3s ease-in';
+        } else {
+          card.closest('.col-md-4').style.display = 'none';
+        }
+      });
+    }
+
+    function resetSearch() {
+      document.getElementById('searchDestinasi').value = '';
+      filterDestinasi();
+    }
+
+    // Add Rating Function
+    window.addRating = function(element, destinasi, rating) {
+      const ratings = JSON.parse(localStorage.getItem('destinasiRatings') || '{}');
+      ratings[destinasi] = rating;
+      localStorage.setItem('destinasiRatings', JSON.stringify(ratings));
+      
+      // Update button colors
+      const buttons = element.parentElement.querySelectorAll('button');
+      buttons.forEach((btn, index) => {
+        if (index + 1 <= rating) {
+          btn.style.color = '#FFD700';
+        } else {
+          btn.style.color = '#ddd';
+        }
+      });
+      
+      alert('Terima kasih! Rating ' + rating + '⭐ telah disimpan untuk ' + destinasi);
+    };
+
+    // Load saved ratings on page load
+    window.addEventListener('load', function() {
+      const ratings = JSON.parse(localStorage.getItem('destinasiRatings') || '{}');
+      Object.keys(ratings).forEach(destinasi => {
+        const ratingValue = ratings[destinasi];
+        const ratingElement = document.querySelector('[data-destinasi="' + destinasi + '"]');
+        if (ratingElement) {
+          const buttons = ratingElement.querySelectorAll('button');
+          buttons.forEach((btn, index) => {
+            if (index + 1 <= ratingValue) {
+              btn.style.color = '#FFD700';
+            }
+          });
+        }
+      });
+    });
+
+    // Live Clock
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const timeString = hours + ':' + minutes + ':' + seconds;
+      
+      const clockElement = document.getElementById('liveClock');
+      if (clockElement) {
+        clockElement.textContent = timeString;
+      }
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Add animation styles
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      
+      body.dark-mode {
+        background: #1a1a1a !important;
+        color: #fff;
+      }
+      
+      body.dark-mode .card {
+        background: #2a2a2a;
+        color: #fff;
+      }
+      
+      body.dark-mode .card-body {
+        background: #2a2a2a;
+      }
+      
+      body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, 
+      body.dark-mode h4, body.dark-mode h5, body.dark-mode h6 {
+        color: #fff;
+      }
+      
+      body.dark-mode p {
+        color: #ccc;
+      }
+      
+      .star-rating {
+        font-size: 1.5rem;
+        letter-spacing: 5px;
+        margin-top: 10px;
+      }
+      
+      .star-rating button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: #ddd;
+        transition: all 0.2s ease;
+        padding: 0 2px;
+      }
+      
+      .star-rating button:hover {
+        color: #FFD700;
+        transform: scale(1.2);
+      }
+      
+      #liveClock {
+        font-size: 1.1rem;
+        font-weight: 700;
+        font-family: 'Courier New', monospace;
+      }
+
+      /* ===== FITUR TESTIMONI & EVENT =====*/
+      .card {
+        transition: all 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+      }
+
+      .badge {
+        font-weight: 600;
+        padding: 0.5rem 0.75rem;
+      }
+
+      /* Travel Tips Cards Animation */
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      #travel-tips .card {
+        animation: slideUp 0.5s ease-out both;
+      }
+
+      #travel-tips .card:nth-child(1) { animation-delay: 0s; }
+      #travel-tips .card:nth-child(2) { animation-delay: 0.1s; }
+      #travel-tips .card:nth-child(3) { animation-delay: 0.2s; }
+      #travel-tips .card:nth-child(4) { animation-delay: 0.3s; }
+      #travel-tips .card:nth-child(5) { animation-delay: 0.4s; }
+      #travel-tips .card:nth-child(6) { animation-delay: 0.5s; }
+      #travel-tips .card:nth-child(7) { animation-delay: 0.6s; }
+      #travel-tips .card:nth-child(8) { animation-delay: 0.7s; }
+
+      #reviews .card {
+        border-top: 3px solid #667eea;
+      }
+    `;
+    document.head.appendChild(style);
+
+    // ===== FITUR EVENT & TESTIMONI =====
+
+    // Set Event Detail untuk Modal
+    window.setEventDetail = function(title, time, desc) {
+      document.getElementById('eventTitle').textContent = title;
+      document.getElementById('eventTime').textContent = time;
+      document.getElementById('eventDesc').textContent = desc;
+    };
+
+    // Share Event
+    window.shareEvent = function() {
+      const title = document.getElementById('eventTitle').textContent;
+      const text = `Yuk ikuti event: ${title} di Semarang! 🎉`;
+      
+      if(navigator.share){
+        navigator.share({
+          title: 'Wisata Semarang',
+          text: text,
+          url: window.location.href
+        }).catch(err => console.log('Share error:', err));
+      } else {
+        // Fallback: copy to clipboard
+        navigator.clipboard.writeText(text).then(() => {
+          alert('Event telah disalin ke clipboard!');
+        }).catch(() => {
+          alert('Event: ' + text);
+        });
+      }
+    };
+
+    // Add Event to Calendar
+    window.addEventToCalendar = function() {
+      const title = document.getElementById('eventTitle').textContent;
+      const time = document.getElementById('eventTime').textContent;
+      
+      const iCalContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Wisata Semarang//Event Calendar//EN
+BEGIN:VEVENT
+SUMMARY:${title}
+DESCRIPTION:Event dari Wisata Semarang
+DTSTART:${time.replace(/[^0-9]/g, '')}T080000
+DTEND:${time.replace(/[^0-9]/g, '')}T170000
+LOCATION:Semarang, Indonesia
+END:VEVENT
+END:VCALENDAR`;
+
+      const blob = new Blob([iCalContent], {type: 'text/calendar'});
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'event.ics';
+      a.click();
+      
+      alert('Event telah ditambahkan ke kalender Anda!');
+    };
+
+    // Smooth Scroll untuk Navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if(target){
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Add to Favorites
+    window.addToFavorites = function(destinasi) {
+      let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      if(!favorites.includes(destinasi)){
+        favorites.push(destinasi);
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        alert('✅ ' + destinasi + ' ditambahkan ke Favorit!');
+      } else {
+        alert('ℹ️ ' + destinasi + ' sudah ada di Favorit.');
+      }
+    };
+
+    // Notification
+    window.showNotification = function(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.style.cssText = 'position:fixed;top:20px;right:20px;padding:15px 20px;background:' + 
+        (type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8') +
+        ';color:white;border-radius:8px;z-index:10000;font-weight:500;box-shadow:0 4px 12px rgba(0,0,0,0.2);animation:slideInRight 0.3s ease;';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    };
+
+    // Add animation to style
+    const toastStyle = document.createElement('style');
+    toastStyle.innerHTML = `
+      @keyframes slideInRight {
+        from { transform: translateX(400px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      @keyframes slideOutRight {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(400px); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(toastStyle);
+
+    // ===== SCROLL ANIMATIONS & EFFECTS =====
+
+    // Intersection Observer untuk animasi saat scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animation = 'slideUp 0.6s ease-out forwards';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    // Apply observer to all cards
+    document.querySelectorAll('.card:not(.destinasi-card), #travel-tips .card').forEach(card => {
+      card.style.opacity = '0';
+      observer.observe(card);
+    });
+
+    // Parallax effect untuk header
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('.site-header');
+      if (header) {
+        const scrolled = window.pageYOffset;
+        header.style.backgroundPosition = `center ${scrolled * 0.5}px`;
+      }
+    });
+
+    // Sticky header effect dengan shadow
+    let lastScrollTop = 0;
+    const navbar = document.querySelector('.galaxy-navbar');
+    
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      if (scrollTop > 50) {
+        navbar.style.boxShadow = '0 8px 40px rgba(102, 126, 234, 0.4)';
+      } else {
+        navbar.style.boxShadow = '0 4px 30px rgba(102, 126, 234, 0.3)';
+      }
+      
+      lastScrollTop = scrollTop;
+    });
+
+    // Scroll to top button
+    const scrollTopBtn = document.createElement('button');
+    scrollTopBtn.innerHTML = '⬆️';
+    scrollTopBtn.style.cssText = `
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      border: none;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 999;
+      opacity: 0;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    `;
+
+    document.body.appendChild(scrollTopBtn);
+
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        scrollTopBtn.style.opacity = '1';
+        scrollTopBtn.style.pointerEvents = 'auto';
+      } else {
+        scrollTopBtn.style.opacity = '0';
+        scrollTopBtn.style.pointerEvents = 'none';
+      }
+    });
+
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+
+    scrollTopBtn.addEventListener('mouseenter', () => {
+      scrollTopBtn.style.transform = 'scale(1.1) translateY(-5px)';
+      scrollTopBtn.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.4)';
+    });
+
+    scrollTopBtn.addEventListener('mouseleave', () => {
+      scrollTopBtn.style.transform = 'scale(1) translateY(0)';
+      scrollTopBtn.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.3)';
+    });
+
+    // Loading animation untuk images
+    document.querySelectorAll('img').forEach(img => {
+      img.addEventListener('load', () => {
+        img.style.animation = 'fadeIn 0.3s ease';
+      });
+    });
+
+    // Smooth hover untuk list items
+    document.querySelectorAll('.list-group-item').forEach(item => {
+      item.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateX(8px)';
+      });
+      item.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateX(0)';
+      });
+    });
+  </script>
+  <!-- Music Player Script -->
+  <script src="music-player.js"></script>
+</body>
+</html>
